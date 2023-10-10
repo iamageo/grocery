@@ -1,16 +1,1 @@
-# grocery
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![teste](https://workana.s3.amazonaws.com/portfolios/tn/c89e9c5599ede0325857390f3ddd33c8/Cover.png?response-content-disposition=inline%3Bfilename%3D%22Cover.png%22&response-content-type=image%2Fpng&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA33COQEVTJSIXHA73%2F20231010%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20231010T205256Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Signature=9fb6b81f571483f8774d80cb334f61f8c4c957c0a526aa30933e33cc9ff5c02c)
