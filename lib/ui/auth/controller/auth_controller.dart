@@ -21,7 +21,6 @@ class AuthController extends GetxController {
     Future.delayed(const Duration(milliseconds: 2000)).then((value) {
       validateToken();
     });
-
   }
 
   Future<void> validateToken() async {
@@ -50,7 +49,7 @@ class AuthController extends GetxController {
 
   void saveDataAndProceedToHome() {
     services.saveLocalData(key: StorageKeys.token, data: user.token!);
-    Get.offAllNamed(AppScreensNames.  home);
+    Get.offAllNamed(AppScreensNames.home);
   }
 
   Future<void> signIn({required String email, required String password}) async {
@@ -69,7 +68,6 @@ class AuthController extends GetxController {
   }
 
   Future<void> signUp(UserModel user) async {
-
     isLoading.value = true;
 
     AuthResult result = await authRepository.signUp(user);
@@ -81,12 +79,33 @@ class AuthController extends GetxController {
       saveDataAndProceedToHome();
     }, error: (error) {
       services.showToast(
-          message: "Ocorreu um erro ao realizar cadastro. $error", isError: true);
+          message: "Ocorreu um erro ao realizar cadastro. $error",
+          isError: true);
     });
+  }
+
+  Future<void> changePassword(
+      {required String currentPassword, required String newPassword}) async {
+    isLoading.value = true;
+    final result = await authRepository.changePassword(
+        email: user.email!,
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        token: user.token!);
+
+    isLoading.value = false;
+
+    if (result) {
+      services.showToast(
+          message: "A senha foi atualizada com sucesso!", isError: false);
+      signOut();
+    } else {
+      services.showToast(
+          message: "A senha atual informada esta incorreta.", isError: true);
+    }
   }
 
   Future<void> resetPassword(String email) async {
     await authRepository.resetPassword(email);
   }
-
 }

@@ -14,8 +14,8 @@ class ProfileTab extends StatefulWidget {
 }
 
 class _ProfileTabState extends State<ProfileTab> {
-
   final authController = Get.find<AuthController>();
+  final formKey = GlobalKey<FormState>();
 
   final cpfFormatter = MaskTextInputFormatter(
       mask: '###.###.###-##', filter: {'#': RegExp(r'[0-9]')});
@@ -130,10 +130,9 @@ class _ProfileTabState extends State<ProfileTab> {
   }
 
   Future<bool?> showDialogConfirmation() {
-
     final currentPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     return showDialog<bool>(
         context: context,
@@ -143,86 +142,101 @@ class _ProfileTabState extends State<ProfileTab> {
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             content: Stack(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Atualizar senha",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                Form(
+                  key: formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text(
+                          "Atualizar senha",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
-                    ),
-                    CustomTextField(
-                      controller: currentPasswordController,
-                      icon: Icons.lock,
-                      label: "Senha atual",
-                      isSecret: true,
-                      validator: (password) {
-                        if (password!.isEmpty) return "Digite sua senha";
-                        if (password.length < 7) {
-                          return "Senha informada muito curta.";
-                        }
-                        return null;
-                      },
-                    ),
-                    CustomTextField(
-                      controller: newPasswordController,
-                      icon: Icons.lock,
-                      label: "Nova senha",
-                      isSecret: true,
-                      validator: (password) {
-                        if (password!.isEmpty) return "Digite sua senha";
-                        if (password.length < 7) {
-                          return "Senha informada muito curta.";
-                        }
-                        return null;
-                      },
-                    ),
-                    CustomTextField(
-                      icon: Icons.lock,
-                      label: "Confirmar nova senha",
-                      isSecret: true,
-                      validator: (password) {
-                        final result = passwordValidator(password);
-
-                        if (result != null) {
-                          return result;
-                        }
-
-                        if (password != newPasswordController.text) {
-                          return 'As senhas não são equivalentes';
-                        }
-
-                        return null;
-                      },
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
+                      CustomTextField(
+                        controller: currentPasswordController,
+                        icon: Icons.lock,
+                        label: "Senha atual",
+                        isSecret: true,
+                        validator: (password) {
+                          if (password!.isEmpty) return "Digite sua senha";
+                          if (password.length < 7) {
+                            return "Senha informada muito curta.";
+                          }
+                          return null;
+                        },
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop(true);
-                      },
-                      child: const Text(
-                        "Atualizar",
-                        style: TextStyle(color: Colors.white),
+                      CustomTextField(
+                        controller: newPasswordController,
+                        icon: Icons.lock,
+                        label: "Nova senha",
+                        isSecret: true,
+                        validator: (password) {
+                          if (password!.isEmpty) return "Digite sua senha";
+                          if (password.length < 7) {
+                            return "Senha informada muito curta.";
+                          }
+                          return null;
+                        },
                       ),
-                    )
-                  ],
+                      CustomTextField(
+                        icon: Icons.lock,
+                        label: "Confirmar nova senha",
+                        isSecret: true,
+                        validator: (password) {
+                          final result = passwordValidator(password);
+
+                          if (result != null) {
+                            return result;
+                          }
+
+                          if (password != newPasswordController.text) {
+                            return 'As senhas não são equivalentes';
+                          }
+
+                          return null;
+                        },
+                      ),
+                      Obx(() {
+                        return ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                          ),
+                          onPressed: authController.isLoading.value
+                              ? null
+                              : () {
+                                  if (formKey.currentState!.validate()) {
+                                    authController.changePassword(
+                                        currentPassword:
+                                            currentPasswordController.text,
+                                        newPassword:
+                                            newPasswordController.text);
+                                  }
+                                },
+                          child: authController.isLoading.value
+                              ? const CircularProgressIndicator()
+                              : const Text(
+                                  "Atualizar",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                        );
+                      })
+                    ],
+                  ),
                 ),
                 Positioned(
-                  top: - 5,
+                    top: -5,
                     right: -5,
                     child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  icon: const Icon(Icons.close),
-                ))
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      icon: const Icon(Icons.close),
+                    ))
               ],
             ),
           );
