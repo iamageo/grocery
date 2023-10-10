@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:grocery/ui/pages/orders/controller/all_orders_controller.dart';
 import '../../../app_colors.dart';
 import 'components/order_tile.dart';
 
-class OrdersTab extends StatelessWidget {
+class OrdersTab extends StatefulWidget {
+
   const OrdersTab({Key? key}) : super(key: key);
+
+  @override
+  State<OrdersTab> createState() => _OrdersTabState();
+}
+
+class _OrdersTabState extends State<OrdersTab> {
+
+  AllOrdersController allOrdersController = Get.find<AllOrdersController>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +43,18 @@ class OrdersTab extends StatelessWidget {
           );
         }
 
-        return ListView.separated(
-          padding: const EdgeInsets.all(16),
-          physics: const BouncingScrollPhysics(),
-          separatorBuilder: (_, index) => const SizedBox(height: 10),
-          itemBuilder: (_, index) => OrderTile(order: controller.allOrders[index]),
-          itemCount: controller.allOrders.length,
+        return RefreshIndicator(
+          onRefresh: () => controller.getAllOrders(),
+          child: ListView.separated(
+            padding: const EdgeInsets.all(16),
+            physics: const AlwaysScrollableScrollPhysics(),
+            separatorBuilder: (_, index) => const SizedBox(height: 10),
+            itemBuilder: (_, index) => OrderTile(order: controller.allOrders[index]),
+            itemCount: controller.allOrders.length,
+          ),
         );
       }),
     );
   }
+
 }
