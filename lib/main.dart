@@ -27,6 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'Grocery App Example',
       theme: ThemeData(
         primarySwatch: CustomColors.customSwatchColor,
+        useMaterial3: false
       ),
       initialRoute: AppScreensNames.splash,
       getPages: AppScreens.pages,

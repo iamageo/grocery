@@ -2,7 +2,7 @@ const baseUrl = "https://parseapi.back4app.com/functions";
 
 abstract class ApiEndPoints {
 
-  static const String login = "$baseUrl/login";
+  static const String login = "$baseUrl/signin";
   static const String register = "$baseUrl/signup";
   static const String validate = "$baseUrl/validate-token";
   static const String resetPassword = "$baseUrl/reset-password";
